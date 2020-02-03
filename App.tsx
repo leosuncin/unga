@@ -1,12 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Header from './components/header';
+import StartGameScreen from './screens/start-game';
 
 export default function App() {
   return (
     <View style={styles.container}>
       <Header title="Guess a number" />
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <StartGameScreen />
     </View>
   );
 }
