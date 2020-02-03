@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Button, FlatList, StyleSheet, View } from 'react-native';
+
+import GoalInput from './components/goal-input';
+import GoalItem from './components/goal-item';
 
 function hashCode(str: string): string {
   let hash = Date.now();
@@ -30,31 +26,39 @@ type Goal = {
 };
 
 export default function App() {
-  const [enteredGoal, setEnteredGoal] = useState('');
   const [courseGoals, setCourseGoals] = useState<Goal[]>([]);
+  const [isAddMode, setIsAddMode] = useState(false);
+
+  function addGoalHandler(value) {
+    setCourseGoals(previousGoals => [
+      ...previousGoals,
+      { value, id: hashCode(value) },
+    ]);
+    setIsAddMode(false);
+  }
+  function removeGoalHandler(id) {
+    setCourseGoals(currentGoals => {
+      return currentGoals.filter(goal => goal.id !== id);
+    });
+  }
+
   return (
     <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Course Goal"
-          style={styles.input}
-          defaultValue={enteredGoal}
-          onChangeText={text => setEnteredGoal(text)}
-        />
-        <Button
-          title="Add"
-          onPress={() => {
-            setCourseGoals(previousGoals => [
-              ...previousGoals,
-              { value: enteredGoal, id: hashCode(enteredGoal) },
-            ]);
-            setEnteredGoal('');
-          }}
-        />
-      </View>
+      <Button title="Add New Goal" onPress={() => setIsAddMode(true)} />
+      <GoalInput
+        visible={isAddMode}
+        onAddGoal={addGoalHandler}
+        onCancel={() => setIsAddMode(false)}
+      />
       <FlatList
         data={courseGoals}
-        renderItem={({ item }) => <Text>{item.value}</Text>}
+        renderItem={itemData => (
+          <GoalItem
+            id={itemData.item.id}
+            onDelete={removeGoalHandler}
+            title={itemData.item.value}
+          />
+        )}
       />
     </View>
   );
@@ -63,15 +67,5 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     padding: 30,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-  },
-  input: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    padding: 5,
-    marginVertical: 5,
-    flex: 2,
   },
 });
