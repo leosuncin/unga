@@ -10,7 +10,13 @@ const StartGameScreen = () => {
       <Text style={styles.title}>Start a new game!</Text>
       <Card style={styles.inputContainer}>
         <Text>Select a number</Text>
-        <TextInput keyboardType="numeric" />
+        <TextInput
+          keyboardType="number-pad"
+          autoCorrect={false}
+          blurOnSubmit
+          maxLength={2}
+          style={styles.input}
+        />
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <Button title="Reset" onPress={() => {}} color={ACCENT_COLOR} />
@@ -33,6 +39,14 @@ const styles = StyleSheet.create({
     width: 300,
     maxWidth: '80%',
     alignItems: 'center',
+  },
+  input: {
+    height: 30,
+    width: '50%',
+    borderBottomColor: 'grey',
+    borderBottomWidth: 1,
+    marginVertical: 10,
+    textAlign: 'center',
   },
   title: {
     fontSize: 20,
