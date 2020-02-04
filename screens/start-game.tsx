@@ -13,7 +13,11 @@ import {
 import Card from '../components/card';
 import { ACCENT_COLOR, PRIMARY_COLOR } from '../constants/colors';
 
-const StartGameScreen = () => {
+type StartGameScreenProps = {
+  onGameStart: CallableFunction;
+};
+
+const StartGameScreen: React.FC<StartGameScreenProps> = (props) => {
   const [enteredValue, setEnteredValue] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState<number>();
@@ -37,6 +41,7 @@ const StartGameScreen = () => {
       setSelectedNumber(chosenNumber);
       setEnteredValue('');
       Keyboard.dismiss();
+      props.onGameStart(selectedNumber);
     }
   };
 
