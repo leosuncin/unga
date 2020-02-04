@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { ACCENT_COLOR } from '../constants/colors';
 import Card from '../components/card';
 
@@ -20,11 +20,41 @@ function generateRandomBetween(
 type GameScreenProps = {
   userChoice: number;
 };
+enum Direction {
+  lower = 'LOWER',
+  greater = 'GREATER',
+}
 
 const GameScreen: React.FC<GameScreenProps> = props => {
+  const low = useRef(1);
+  const high = useRef(100);
   const [currentGuess, setCurrentGuess] = useState(
-    generateRandomBetween(1, 99, props.userChoice),
+    generateRandomBetween(low.current, high.current, props.userChoice),
   );
+  useEffect(() => {
+    if (props.userChoice === currentGuess) {
+      Alert.alert('Game over');
+    }
+  });
+  const nextGuessHandler = (direction: Direction) => () => {
+    if (
+      (direction === Direction.lower && currentGuess < props.userChoice) ||
+      (direction === Direction.greater && currentGuess > props.userChoice)
+    ) {
+      Alert.alert("Don't Lie!", 'You know that this is wrong...', [
+        { text: 'Sorry!', style: 'cancel' },
+      ]);
+    } else {
+      if (direction === Direction.lower) {
+        high.current = currentGuess;
+      } else {
+        low.current = currentGuess;
+      }
+      setCurrentGuess(guess =>
+        generateRandomBetween(low.current, high.current, guess),
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -33,8 +63,8 @@ const GameScreen: React.FC<GameScreenProps> = props => {
         <Text style={styles.number}>{currentGuess}</Text>
       </View>
       <Card style={styles.buttonContainer}>
-        <Button title="LOWER" onPress={() => {}} />
-        <Button title="GREATER" onPress={() => {}} />
+        <Button title="LOWER" onPress={nextGuessHandler(Direction.lower)} />
+        <Button title="GREATER" onPress={nextGuessHandler(Direction.greater)} />
       </Card>
     </View>
   );
