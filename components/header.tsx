@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   title: {
     color: 'black',
     fontSize: 18,
+    fontFamily: 'open-sans-bold',
   },
 });
 
