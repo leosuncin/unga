@@ -10,6 +10,7 @@ const CategoryMealScreen: React.FC<NavigationScreenProps> = props => {
         title="Go to Details"
         onPress={() => props.navigation.navigate('MealDetail')}
       />
+      <Button title="Go back" onPress={() => props.navigation.goBack()} />
     </View>
   );
 };
